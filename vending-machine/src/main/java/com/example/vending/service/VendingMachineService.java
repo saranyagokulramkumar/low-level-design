@@ -54,7 +54,7 @@ public class VendingMachineService implements Subject {
             return "Item out of stock";
         }
 
-        notifyObservers("Price : " + item.get().getPrice());
+        notifyObservers("Price: " + item.get().getPrice());
         return "Selected item: "+item.get().getCode() + ", Price: "+item.get().getPrice();
     }
 

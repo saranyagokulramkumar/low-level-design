@@ -1,4 +1,4 @@
-package test.java.com.example.vending;
+package com.example.vending;
 
 import com.example.vending.model.Item;
 import com.example.vending.model.SnackItem;

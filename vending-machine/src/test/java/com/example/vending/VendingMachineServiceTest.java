@@ -1,4 +1,4 @@
-package test.java.com.example.vending;
+package com.example.vending;
 
 import com.example.vending.model.Item;
 import com.example.vending.model.SnackItem;
@@ -8,6 +8,7 @@ import com.example.vending.service.PaymentService;
 import com.example.vending.service.VendingMachineService;
 import com.example.vending.strategy.CardPayment;
 import com.example.vending.strategy.CoinPayment;
+import com.example.vending.strategy.PaymentStrategy;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -17,8 +18,7 @@ import org.mockito.MockitoAnnotations;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class VendingMachineServiceTest {
 
@@ -57,7 +57,6 @@ public class VendingMachineServiceTest {
     @Test
     void testInsertPaymentWithCoinPayment(){
         CoinPayment coinPayment = new CoinPayment();
-        coinPayment.addPayment(1.0f);
         when(paymentService.getPaymentStrategy()).thenReturn(coinPayment);
 
         vendingMachineService.insertPayment(1.0f,"coin");
@@ -68,7 +67,6 @@ public class VendingMachineServiceTest {
     @Test
     void testInsertPaymentWithCardPayment(){
         CardPayment cardPayment = new CardPayment();
-        cardPayment.addPayment(2.0f);
 
         when(paymentService.getPaymentStrategy()).thenReturn(cardPayment);
 
@@ -88,7 +86,7 @@ public class VendingMachineServiceTest {
 
         String result = vendingMachineService.completeTransaction("S1");
 
-        assertEquals("Transaction complete. Dispensind item: S1", result);
+        assertEquals("Transaction complete. Dispensing item: S1", result);
 
         verify(itemService).decrementItemQuantity("S1");
         verify(displayObserver).update("Transaction complete");
@@ -104,12 +102,15 @@ public class VendingMachineServiceTest {
 
         String result = vendingMachineService.completeTransaction("S1");
 
-        assertEquals("Insufficient funds.",result);
-        verify(displayObserver).update("Insufficient funds.");
+        assertEquals("Insufficient funds",result);
+        verify(displayObserver).update("Insufficient funds");
     }
 
     @Test
     void testCancelTransaction(){
+        PaymentStrategy mockPaymentStrategy = mock(PaymentStrategy.class);
+
+        when(paymentService.getPaymentStrategy()).thenReturn(mockPaymentStrategy);
         vendingMachineService.cancelTransation();
 
         verify(paymentService.getPaymentStrategy()).resetBalance();
