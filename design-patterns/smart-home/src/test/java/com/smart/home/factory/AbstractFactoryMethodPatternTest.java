@@ -2,7 +2,7 @@ package com.smart.home.factory;
 
 import org.junit.jupiter.api.Test;
 
-public class AbstractFactoryMethodPatterTest {
+public class AbstractFactoryMethodPatternTest {
     @Test
     public void testAbstractFactoryMethodPattern(){
         DeviceFamilyFactory smartFactory = new SmartDeviceFamily();
